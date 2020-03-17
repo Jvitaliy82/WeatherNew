@@ -5,7 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -18,10 +18,11 @@ public class MyCard extends View {
 
     private Paint paintBackground;
     private Paint paintLine;
+    private Paint paintTextBolt;
     private int backgroundColor;
     private int lineColor;
     private int cornerRadius;
-    private Bitmap tempBitmap;
+    private String humidity = "";
 
     public MyCard(Context context) {
         super(context);
@@ -43,22 +44,32 @@ public class MyCard extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        tempBitmap = drawableToBitmap(
-                getResources().getDrawable(R.drawable.ic_public_black_24dp),
-                getHeight()/2 - 70, getHeight()/2 - 70);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawRoundRect(0, 0, getWidth(), getHeight(), cornerRadius, cornerRadius, paintBackground);
+
+        //вертикальная линия
         canvas.drawLine(getWidth()/2, getHeight()/10,
                 getWidth()/2, getHeight() - getHeight()/10, paintLine);
+
+        //горизонтальная линия
         canvas.drawLine(getWidth()/20, getHeight()/2,
                 getWidth() - getWidth()/20, getHeight()/2, paintLine);
-        canvas.drawBitmap(tempBitmap,
-                getWidth()/2 - getHeight()/2 + getHeight()/8,
-                getHeight()/8, paintLine);
+
+
+        canvas.drawBitmap(drawableToBitmap(
+                getResources().getDrawable(R.drawable.ic_humidity),
+                getHeight()/3 - 30, getHeight()/3 - 30),
+                getWidth()/2 - getHeight()/2 + getHeight()/7,
+                getHeight()/7, paintLine);
+
+        //надпись ВЛАЖНОСТЬ
+        canvas.drawText("Влажность", getWidth()/20, getHeight()/10 + 30, paintLine);
+        // значвение влажности
+        canvas.drawText(humidity, getWidth()/20, (getHeight()/10 + 35)*2, paintTextBolt);
     }
 
     private void init() {
@@ -69,6 +80,14 @@ public class MyCard extends View {
         paintLine = new Paint();
         paintLine.setColor(getContext().getResources().getColor(lineColor));
         paintLine.setStrokeWidth(1);
+        paintLine.setTextSize(50);
+        paintLine.setTextAlign(Paint.Align.LEFT);
+
+        paintTextBolt = new Paint();
+        paintTextBolt.setColor(getContext().getResources().getColor(lineColor));
+        paintTextBolt.setTextSize(60);
+        paintLine.setTextAlign(Paint.Align.LEFT);
+        paintTextBolt.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
 
     }
 
@@ -93,5 +112,10 @@ public class MyCard extends View {
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
         return bitmap;
+    }
+
+    public void setHumidity(String humidity) {
+        this.humidity = humidity;
+        invalidate();
     }
 }

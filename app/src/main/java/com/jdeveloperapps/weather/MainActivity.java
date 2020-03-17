@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.jdeveloperapps.weather.customViews.MyCard;
 import com.jdeveloperapps.weather.retrofit.model.WeatherRequest;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView city;
     private TextView temp;
     private TextView desc;
+    private MyCard myCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         city = findViewById(R.id.city);
         temp = findViewById(R.id.temperature);
         desc = findViewById(R.id.description);
+        myCard = findViewById(R.id.myCard);
 
         presenter = new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(getApplication()))
                 .get(Presenter.class);
@@ -35,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
             city.setText(weatherRequest.city.name);
             temp.setText(prepareTemp(weatherRequest.listMassives[0].main.temp));
             desc.setText(weatherRequest.listMassives[0].weather[0].description);
+            myCard.setHumidity(weatherRequest.listMassives[0].main.humidity + " %");
         });
 
     }
