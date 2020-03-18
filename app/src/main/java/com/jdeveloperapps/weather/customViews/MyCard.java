@@ -16,6 +16,8 @@ import com.jdeveloperapps.weather.R;
 
 public class MyCard extends View {
 
+    private String WIND = "Ветер ";
+
     private Paint paintBackground;
     private Paint paintLine;
     private Paint paintTextBolt;
@@ -24,6 +26,7 @@ public class MyCard extends View {
     private int cornerRadius;
     private String humidity = "";
     private String temp = "";
+    private String pressure = "";
 
     private String speedWind = "";
 
@@ -62,6 +65,7 @@ public class MyCard extends View {
         canvas.drawLine(getWidth()/20, getHeight()/2,
                 getWidth() - getWidth()/20, getHeight()/2, paintLine);
 
+        ///////////////////////////////////////////////////////////////////////////////
         //иконка ВЛАЖНОСТЬ
         canvas.drawBitmap(drawableToBitmap(
                 getResources().getDrawable(R.drawable.ic_humidity),
@@ -74,6 +78,7 @@ public class MyCard extends View {
         // значвение влажности
         canvas.drawText(humidity, getWidth()/20, (getHeight()/10 + 35)*2, paintTextBolt);
 
+        ////////////////////////////////////////////////////////////////////////////////
         //иконка ТЕМПЕРАТУРА
         canvas.drawBitmap(drawableToBitmap(
                 getResources().getDrawable(R.drawable.ic_temp),
@@ -86,6 +91,7 @@ public class MyCard extends View {
         // значвение температуры
         canvas.drawText(temp, getWidth()/2 + getWidth()/20, (getHeight()/10 + 35)*2, paintTextBolt);
 
+        ////////////////////////////////////////////////////////////////////////////////
         //иконка ВЕТЕР
         canvas.drawBitmap(drawableToBitmap(
                 getResources().getDrawable(R.drawable.ic_wind),
@@ -94,13 +100,26 @@ public class MyCard extends View {
                 getHeight()/2 + getHeight()/7, paintLine);
 
         //надпись ВЕТЕР
-        canvas.drawText("Ветер", getWidth()/20, getHeight()/2 + getHeight()/10 + 30, paintLine);
+        canvas.drawText(WIND, getWidth()/20, getHeight()/2 + getHeight()/10 + 30, paintLine);
         //TODO: напрвелие
 
         // значвение ветра
         canvas.drawText(speedWind, getWidth()/20, getHeight()/2 + ((getHeight()/10 + 30)*2), paintTextBolt);
 
+        ////////////////////////////////////////////////////////////////////////////////
+        //иконка ДАВЛЕНИЕ
+        canvas.drawBitmap(drawableToBitmap(
+                getResources().getDrawable(R.drawable.ic_pressure),
+                getHeight()/3 - 30, getHeight()/3 - 30),
+                getWidth() - getHeight()/2 + getHeight()/7,
+                getHeight()/2 + getHeight()/7, paintLine);
 
+        //надпись ДАВЛЕИНЕ
+        canvas.drawText("Давление", getWidth()/2 + getWidth()/20,
+                getHeight()/2 + getHeight()/10 + 30, paintLine);
+
+        // значение давления
+        canvas.drawText(pressure, getWidth()/2 + getWidth()/20, getHeight()/2 + ((getHeight()/10 + 30)*2), paintTextBolt);
     }
 
     private void init() {
@@ -147,15 +166,19 @@ public class MyCard extends View {
 
     public void setHumidity(String humidity) {
         this.humidity = humidity;
-        invalidate();
     }
 
     public void setTemp(String temp) {
         this.temp = temp;
-        invalidate();
+
     }
 
     public void setSpeedWind(String speedWind) {
         this.speedWind = speedWind;
+    }
+
+    public void setPressure(String pressure) {
+        this.pressure = pressure;
+        invalidate();
     }
 }

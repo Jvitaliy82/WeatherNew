@@ -6,4 +6,5 @@ public class Main {
     @SerializedName("temp") public float temp;
     @SerializedName("feels_like") public float feels_like;
     @SerializedName("humidity") public String humidity;
+    @SerializedName("pressure") public String pressure;
 }

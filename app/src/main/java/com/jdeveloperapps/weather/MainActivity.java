@@ -1,14 +1,14 @@
 package com.jdeveloperapps.weather;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.SearchView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.jdeveloperapps.weather.customViews.MyCard;
 import com.jdeveloperapps.weather.retrofit.model.WeatherRequest;
@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         myCard.setSpeedWind(prepareSpeedWind(weatherRequest.listMassives[0].wind.speed));
         myCard.setHumidity(weatherRequest.listMassives[0].main.humidity + " %");
         myCard.setTemp(prepareTemp(weatherRequest.listMassives[0].main.feels_like));
+        myCard.setPressure(preparePressure(weatherRequest.listMassives[0].main.pressure));
     }
 
     @Override
@@ -85,6 +86,13 @@ public class MainActivity extends AppCompatActivity {
         StringBuilder sb = new StringBuilder();
         sb.append(Math.round(f));
         sb.append(" m/s");
+        return sb.toString();
+    }
+
+    private String preparePressure(String pressure) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(pressure);
+        sb.append(" mBar");
         return sb.toString();
     }
 
