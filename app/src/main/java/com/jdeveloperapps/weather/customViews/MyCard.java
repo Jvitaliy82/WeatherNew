@@ -23,6 +23,9 @@ public class MyCard extends View {
     private int lineColor;
     private int cornerRadius;
     private String humidity = "";
+    private String temp = "";
+
+    private String speedWind = "";
 
     public MyCard(Context context) {
         super(context);
@@ -59,7 +62,7 @@ public class MyCard extends View {
         canvas.drawLine(getWidth()/20, getHeight()/2,
                 getWidth() - getWidth()/20, getHeight()/2, paintLine);
 
-
+        //иконка ВЛАЖНОСТЬ
         canvas.drawBitmap(drawableToBitmap(
                 getResources().getDrawable(R.drawable.ic_humidity),
                 getHeight()/3 - 30, getHeight()/3 - 30),
@@ -70,6 +73,34 @@ public class MyCard extends View {
         canvas.drawText("Влажность", getWidth()/20, getHeight()/10 + 30, paintLine);
         // значвение влажности
         canvas.drawText(humidity, getWidth()/20, (getHeight()/10 + 35)*2, paintTextBolt);
+
+        //иконка ТЕМПЕРАТУРА
+        canvas.drawBitmap(drawableToBitmap(
+                getResources().getDrawable(R.drawable.ic_temp),
+                getHeight()/3 - 30, getHeight()/3 - 30),
+                getWidth() - getHeight()/2 + getHeight()/7,
+                getHeight()/7, paintLine);
+
+        //надпись ОЩУЩАЕТСЯ
+        canvas.drawText("Ощущается", getWidth()/2 + getWidth()/20, getHeight()/10 + 30, paintLine);
+        // значвение температуры
+        canvas.drawText(temp, getWidth()/2 + getWidth()/20, (getHeight()/10 + 35)*2, paintTextBolt);
+
+        //иконка ВЕТЕР
+        canvas.drawBitmap(drawableToBitmap(
+                getResources().getDrawable(R.drawable.ic_wind),
+                getHeight()/3 - 30, getHeight()/3 - 30),
+                getWidth()/2 - getHeight()/2 + getHeight()/7,
+                getHeight()/2 + getHeight()/7, paintLine);
+
+        //надпись ВЕТЕР
+        canvas.drawText("Ветер", getWidth()/20, getHeight()/2 + getHeight()/10 + 30, paintLine);
+        //TODO: напрвелие
+
+        // значвение ветра
+        canvas.drawText(speedWind, getWidth()/20, getHeight()/2 + ((getHeight()/10 + 30)*2), paintTextBolt);
+
+
     }
 
     private void init() {
@@ -117,5 +148,14 @@ public class MyCard extends View {
     public void setHumidity(String humidity) {
         this.humidity = humidity;
         invalidate();
+    }
+
+    public void setTemp(String temp) {
+        this.temp = temp;
+        invalidate();
+    }
+
+    public void setSpeedWind(String speedWind) {
+        this.speedWind = speedWind;
     }
 }

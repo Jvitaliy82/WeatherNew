@@ -35,12 +35,18 @@ public class MainActivity extends AppCompatActivity {
                 .get(Presenter.class);
         LiveData<WeatherRequest> liveData = presenter.getData();
         liveData.observe(this, weatherRequest -> {
-            city.setText(weatherRequest.city.name);
-            temp.setText(prepareTemp(weatherRequest.listMassives[0].main.temp));
-            desc.setText(weatherRequest.listMassives[0].weather[0].description);
-            myCard.setHumidity(weatherRequest.listMassives[0].main.humidity + " %");
+            opdateWeather(weatherRequest);
         });
 
+    }
+
+    private void opdateWeather(WeatherRequest weatherRequest) {
+        city.setText(weatherRequest.city.name);
+        temp.setText(prepareTemp(weatherRequest.listMassives[0].main.temp));
+        desc.setText(weatherRequest.listMassives[0].weather[0].description);
+        myCard.setSpeedWind(prepareSpeedWind(weatherRequest.listMassives[0].wind.speed));
+        myCard.setHumidity(weatherRequest.listMassives[0].main.humidity + " %");
+        myCard.setTemp(prepareTemp(weatherRequest.listMassives[0].main.feels_like));
     }
 
     @Override
@@ -72,6 +78,13 @@ public class MainActivity extends AppCompatActivity {
         if (f > 0) sb.append("+");
         sb.append(Math.round(f));
         sb.append(" °C");
+        return sb.toString();
+    }
+
+    private String prepareSpeedWind(float f) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(Math.round(f));
+        sb.append(" m/s");
         return sb.toString();
     }
 
