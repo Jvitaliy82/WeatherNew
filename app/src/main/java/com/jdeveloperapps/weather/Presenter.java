@@ -14,9 +14,6 @@ import com.jdeveloperapps.weather.retrofit.model.WeatherRequest;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-
-import static com.jdeveloperapps.weather.retrofit.interfaces.OpenWeatherRepo.getSingleton;
 
 public class Presenter extends AndroidViewModel {
 
@@ -48,5 +45,23 @@ public class Presenter extends AndroidViewModel {
                                 "нет интернета", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    public void requestWeatherByGPS(String lat, String lon) {
+         OpenWeatherRepo.getSingleton().getAPI_BY_GPS().loadWeather(lat, lon, "metric", "ru", API_KEY)
+                 .enqueue(new Callback<WeatherRequest>() {
+                     @Override
+                     public void onResponse(Call<WeatherRequest> call, Response<WeatherRequest> response) {
+                         if (response.body() != null && response.isSuccessful()) {
+                             weatherRequest.setValue(response.body());
+                         }
+                     }
+
+                     @Override
+                     public void onFailure(Call<WeatherRequest> call, Throwable t) {
+                         Toast.makeText(getApplication().getApplicationContext(),
+                                 "нет интернета", Toast.LENGTH_SHORT).show();
+                     }
+                 });
     }
 }

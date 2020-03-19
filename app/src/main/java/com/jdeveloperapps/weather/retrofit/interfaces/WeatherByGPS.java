@@ -11,5 +11,6 @@ public interface WeatherByGPS {
     Call<WeatherRequest> loadWeather(@Query("lat") String lat,
                                      @Query("lon") String lon,
                                      @Query("units") String metric,
+                                     @Query("lang") String lang,
                                      @Query("appid") String keyApi);
 }

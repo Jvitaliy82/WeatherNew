@@ -27,7 +27,7 @@ public class MyCard extends View {
     private String humidity = "";
     private String temp = "";
     private String pressure = "";
-
+    private String degWind = "";
     private String speedWind = "";
 
     public MyCard(Context context) {
@@ -101,7 +101,9 @@ public class MyCard extends View {
 
         //надпись ВЕТЕР
         canvas.drawText(WIND, getWidth()/20, getHeight()/2 + getHeight()/10 + 30, paintLine);
-        //TODO: напрвелие
+        //напрвелие ветра
+        canvas.drawText(degWind, getWidth()/20 + paintTextBolt.measureText(WIND),
+                getHeight()/2 + getHeight()/10 + 30, paintTextBolt);
 
         // значвение ветра
         canvas.drawText(speedWind, getWidth()/20, getHeight()/2 + ((getHeight()/10 + 30)*2), paintTextBolt);
@@ -171,6 +173,10 @@ public class MyCard extends View {
     public void setTemp(String temp) {
         this.temp = temp;
 
+    }
+
+    public void setDegWind(String degWind) {
+        this.degWind = degWind;
     }
 
     public void setSpeedWind(String speedWind) {

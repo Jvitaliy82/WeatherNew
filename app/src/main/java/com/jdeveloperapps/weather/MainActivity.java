@@ -6,11 +6,13 @@ import android.view.MenuItem;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.jdeveloperapps.weather.customViews.MyCard;
+import com.jdeveloperapps.weather.gpsData.GpsCoordinator;
 import com.jdeveloperapps.weather.retrofit.model.WeatherRequest;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,12 +37,12 @@ public class MainActivity extends AppCompatActivity {
                 .get(Presenter.class);
         LiveData<WeatherRequest> liveData = presenter.getData();
         liveData.observe(this, weatherRequest -> {
-            opdateWeather(weatherRequest);
+            updateWeather(weatherRequest);
         });
 
     }
 
-    private void opdateWeather(WeatherRequest weatherRequest) {
+    private void updateWeather(WeatherRequest weatherRequest) {
         city.setText(weatherRequest.city.name);
         temp.setText(prepareTemp(weatherRequest.listMassives[0].main.temp));
         desc.setText(weatherRequest.listMassives[0].weather[0].description);
@@ -72,6 +74,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.gpsButton:
+                GpsCoordinator gpsCoordinator = new GpsCoordinator(presenter);
+                gpsCoordinator.getLatLot(this);
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private String prepareTemp(float f) {
