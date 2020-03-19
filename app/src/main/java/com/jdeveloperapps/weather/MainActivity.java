@@ -1,5 +1,6 @@
 package com.jdeveloperapps.weather;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,7 +18,10 @@ import com.jdeveloperapps.weather.retrofit.model.WeatherRequest;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final String LAST_CITY = "lastCity";
+
     private Presenter presenter;
+    private SharedPreferences sharedPreferences;
     private TextView city;
     private TextView temp;
     private TextView desc;
@@ -39,10 +43,11 @@ public class MainActivity extends AppCompatActivity {
         liveData.observe(this, weatherRequest -> {
             updateWeather(weatherRequest);
         });
-
+        getLastCity();
     }
 
     private void updateWeather(WeatherRequest weatherRequest) {
+        saveLastCity(weatherRequest.city.name);
         city.setText(weatherRequest.city.name);
         temp.setText(prepareTemp(weatherRequest.listMassives[0].main.temp));
         desc.setText(weatherRequest.listMassives[0].weather[0].description);
@@ -85,6 +90,19 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void getLastCity() {
+        sharedPreferences = getPreferences(MODE_PRIVATE);
+        String city = sharedPreferences.getString(LAST_CITY, "Moscow");
+        presenter.requestWeatherByCity(city);
+    }
+
+    private void saveLastCity(String city) {
+        sharedPreferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor ed = sharedPreferences.edit();
+        ed.putString(LAST_CITY, city);
+        ed.apply();
     }
 
     private String prepareTemp(float f) {
