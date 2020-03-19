@@ -21,12 +21,12 @@ public class Presenter extends AndroidViewModel {
 
     private MutableLiveData<WeatherRequest> weatherRequest = new MutableLiveData<>();
 
-     public Presenter(@NonNull Application application) {
+    public Presenter(@NonNull Application application) {
         super(application);
     }
 
     public LiveData<WeatherRequest> getData() {
-         return weatherRequest;
+        return weatherRequest;
     }
 
     public void requestWeatherByCity(String cityName) {
@@ -36,6 +36,27 @@ public class Presenter extends AndroidViewModel {
                     public void onResponse(Call<WeatherRequest> call, Response<WeatherRequest> response) {
                         if (response.body() != null && response.isSuccessful()) {
                             weatherRequest.setValue(response.body());
+                        } else {
+                            shoeMessage("город не найден");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<WeatherRequest> call, Throwable t) {
+                        shoeMessage("нет интернета");
+                    }
+                });
+    }
+
+    public void requestWeatherByGPS(String lat, String lon) {
+        OpenWeatherRepo.getSingleton().getAPI_BY_GPS().loadWeather(lat, lon, "metric", "ru", API_KEY)
+                .enqueue(new Callback<WeatherRequest>() {
+                    @Override
+                    public void onResponse(Call<WeatherRequest> call, Response<WeatherRequest> response) {
+                        if (response.body() != null && response.isSuccessful()) {
+                            weatherRequest.setValue(response.body());
+                        } else {
+                            shoeMessage("город не найден");
                         }
                     }
 
@@ -47,21 +68,8 @@ public class Presenter extends AndroidViewModel {
                 });
     }
 
-    public void requestWeatherByGPS(String lat, String lon) {
-         OpenWeatherRepo.getSingleton().getAPI_BY_GPS().loadWeather(lat, lon, "metric", "ru", API_KEY)
-                 .enqueue(new Callback<WeatherRequest>() {
-                     @Override
-                     public void onResponse(Call<WeatherRequest> call, Response<WeatherRequest> response) {
-                         if (response.body() != null && response.isSuccessful()) {
-                             weatherRequest.setValue(response.body());
-                         }
-                     }
-
-                     @Override
-                     public void onFailure(Call<WeatherRequest> call, Throwable t) {
-                         Toast.makeText(getApplication().getApplicationContext(),
-                                 "нет интернета", Toast.LENGTH_SHORT).show();
-                     }
-                 });
+    private void shoeMessage(String message) {
+        Toast.makeText(getApplication().getApplicationContext(),
+                message, Toast.LENGTH_SHORT).show();
     }
 }
