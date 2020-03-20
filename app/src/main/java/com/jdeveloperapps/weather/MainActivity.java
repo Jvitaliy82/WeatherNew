@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.jdeveloperapps.weather.customViews.MyCard;
 import com.jdeveloperapps.weather.gpsData.GpsCoordinator;
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Presenter presenter;
     private SharedPreferences sharedPreferences;
+    private SwipeRefreshLayout swipeContainer;
     private TextView city;
     private TextView temp;
     private TextView desc;
@@ -32,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        swipeContainer = findViewById(R.id.swipe_container);
+        swipeContainer.setOnRefreshListener(this::getLastCity);
+
         city = findViewById(R.id.city);
         temp = findViewById(R.id.temperature);
         desc = findViewById(R.id.description);
@@ -39,10 +44,12 @@ public class MainActivity extends AppCompatActivity {
 
         presenter = new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(getApplication()))
                 .get(Presenter.class);
-        LiveData<WeatherRequest> liveData = presenter.getData();
-        liveData.observe(this, weatherRequest -> {
-            updateWeather(weatherRequest);
-        });
+        LiveData<WeatherRequest> WeatherData = presenter.getWeatherData();
+        WeatherData.observe(this, this::updateWeather);
+
+        LiveData<Boolean> refreshStatus = presenter.getRefreshStatus();
+        refreshStatus.observe(this, this::setRefreshStatus);
+
         getLastCity();
     }
 
@@ -55,6 +62,10 @@ public class MainActivity extends AppCompatActivity {
         myCard.setHumidity(weatherRequest.listMassives[0].main.humidity + " %");
         myCard.setTemp(prepareTemp(weatherRequest.listMassives[0].main.feels_like));
         myCard.setPressure(preparePressure(weatherRequest.listMassives[0].main.pressure));
+    }
+
+    private void setRefreshStatus(boolean status) {
+        swipeContainer.setRefreshing(status);
     }
 
     @Override
