@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.viewpager.widget.ViewPager;
 
 import com.jdeveloperapps.weather.customViews.MyCard;
 import com.jdeveloperapps.weather.gpsData.GpsCoordinator;
@@ -29,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView desc;
     private MyCard myCard;
 
+    private ViewPager viewPager;
+    private MyFragmentPageAdapter pagerAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,10 +47,16 @@ public class MainActivity extends AppCompatActivity {
         desc = findViewById(R.id.description);
         myCard = findViewById(R.id.myCard);
 
+        viewPager = findViewById(R.id.pager);
+        pagerAdapter = new MyFragmentPageAdapter(getSupportFragmentManager());
+
+        viewPager.setClipToPadding(false);
+        viewPager.setPadding(60, 0, 60, 0);
+
         presenter = new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(getApplication()))
                 .get(Presenter.class);
-        LiveData<WeatherRequest> WeatherData = presenter.getWeatherData();
-        WeatherData.observe(this, this::updateWeather);
+        LiveData<WeatherRequest> weatherData = presenter.getWeatherData();
+        weatherData.observe(this, this::updateWeather);
 
         LiveData<Boolean> refreshStatus = presenter.getRefreshStatus();
         refreshStatus.observe(this, this::setRefreshStatus);
@@ -62,10 +73,22 @@ public class MainActivity extends AppCompatActivity {
         myCard.setHumidity(weatherRequest.listMassives[0].main.humidity + " %");
         myCard.setTemp(prepareTemp(weatherRequest.listMassives[0].main.feels_like));
         myCard.setPressure(preparePressure(weatherRequest.listMassives[0].main.pressure));
+        updatePageView(weatherRequest);
+    }
+
+    private void updatePageView(WeatherRequest weather){
+        pagerAdapter.setWeatherRequest(weather);
+        if (viewPager.getAdapter() == null) {
+            viewPager.setAdapter(pagerAdapter);
+        }
+
+
     }
 
     private void setRefreshStatus(boolean status) {
         swipeContainer.setRefreshing(status);
+        myCard.setVisibility(status ? View.INVISIBLE : View.VISIBLE);
+        viewPager.setVisibility(status ? View.INVISIBLE : View.VISIBLE);
     }
 
     @Override
