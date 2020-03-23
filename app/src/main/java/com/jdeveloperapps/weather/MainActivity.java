@@ -18,6 +18,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.jdeveloperapps.weather.customViews.MyCard;
 import com.jdeveloperapps.weather.gpsData.GpsCoordinator;
 import com.jdeveloperapps.weather.retrofit.model.WeatherRequest;
+import com.jdeveloperapps.weather.utils.PrepareUtil;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -67,12 +68,12 @@ public class MainActivity extends AppCompatActivity {
     private void updateWeather(WeatherRequest weatherRequest) {
         saveLastCity(weatherRequest.city.name);
         city.setText(weatherRequest.city.name);
-        temp.setText(prepareTemp(weatherRequest.listMassives[0].main.temp));
+        temp.setText(PrepareUtil.prepareTemp(weatherRequest.listMassives[0].main.temp));
         desc.setText(weatherRequest.listMassives[0].weather[0].description);
-        myCard.setSpeedWind(prepareSpeedWind(weatherRequest.listMassives[0].wind.speed));
+        myCard.setSpeedWind(PrepareUtil.prepareSpeedWind(weatherRequest.listMassives[0].wind.speed));
         myCard.setHumidity(weatherRequest.listMassives[0].main.humidity + " %");
-        myCard.setTemp(prepareTemp(weatherRequest.listMassives[0].main.feels_like));
-        myCard.setPressure(preparePressure(weatherRequest.listMassives[0].main.pressure));
+        myCard.setTemp(PrepareUtil.prepareTemp(weatherRequest.listMassives[0].main.feels_like));
+        myCard.setPressure(PrepareUtil.preparePressure(weatherRequest.listMassives[0].main.pressure));
         updatePageView(weatherRequest);
     }
 
@@ -81,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         if (viewPager.getAdapter() == null) {
             viewPager.setAdapter(pagerAdapter);
         }
-
+        viewPager.setCurrentItem(0);
 
     }
 
@@ -139,26 +140,5 @@ public class MainActivity extends AppCompatActivity {
         ed.apply();
     }
 
-    private String prepareTemp(float f) {
-        StringBuilder sb = new StringBuilder();
-        if (f > 0) sb.append("+");
-        sb.append(Math.round(f));
-        sb.append(" °C");
-        return sb.toString();
-    }
-
-    private String prepareSpeedWind(float f) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(Math.round(f));
-        sb.append(" m/s");
-        return sb.toString();
-    }
-
-    private String preparePressure(String pressure) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(pressure);
-        sb.append(" mBar");
-        return sb.toString();
-    }
 
 }

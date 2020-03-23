@@ -16,7 +16,7 @@ import com.jdeveloperapps.weather.R;
 
 public class MyCard extends View {
 
-    private String WIND = "Ветер ";
+    private String WIND = "Ветер "; // нужно для вычисления днинны надпись, что бы расположить сразу после
 
     private Paint paintBackground;
     private Paint paintLine;

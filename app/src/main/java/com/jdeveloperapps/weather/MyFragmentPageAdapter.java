@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.jdeveloperapps.weather.retrofit.model.ListMassive;
 import com.jdeveloperapps.weather.retrofit.model.WeatherRequest;
 
 public class MyFragmentPageAdapter extends FragmentPagerAdapter {
@@ -18,7 +19,8 @@ public class MyFragmentPageAdapter extends FragmentPagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        return PageFragment.newInstance(position);
+        ListMassive list = weatherRequest.listMassives[position];
+        return PageFragment.newInstance(list);
     }
 
     @Override
