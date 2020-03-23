@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -11,10 +12,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.viewpager.widget.ViewPager;
 
 import com.jdeveloperapps.weather.customViews.MyCard;
 import com.jdeveloperapps.weather.gpsData.GpsCoordinator;
 import com.jdeveloperapps.weather.retrofit.model.WeatherRequest;
+import com.jdeveloperapps.weather.utils.PrepareUtil;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,39 +26,70 @@ public class MainActivity extends AppCompatActivity {
 
     private Presenter presenter;
     private SharedPreferences sharedPreferences;
+    private SwipeRefreshLayout swipeContainer;
     private TextView city;
     private TextView temp;
     private TextView desc;
     private MyCard myCard;
+
+    private ViewPager viewPager;
+    private MyFragmentPageAdapter pagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        swipeContainer = findViewById(R.id.swipe_container);
+        swipeContainer.setOnRefreshListener(this::getLastCity);
+
         city = findViewById(R.id.city);
         temp = findViewById(R.id.temperature);
         desc = findViewById(R.id.description);
         myCard = findViewById(R.id.myCard);
 
+        viewPager = findViewById(R.id.pager);
+        pagerAdapter = new MyFragmentPageAdapter(getSupportFragmentManager());
+
+        viewPager.setClipToPadding(false);
+        viewPager.setPadding(60, 0, 60, 0);
+
         presenter = new ViewModelProvider(this, new ViewModelProvider.AndroidViewModelFactory(getApplication()))
                 .get(Presenter.class);
-        LiveData<WeatherRequest> liveData = presenter.getData();
-        liveData.observe(this, weatherRequest -> {
-            updateWeather(weatherRequest);
-        });
+        LiveData<WeatherRequest> weatherData = presenter.getWeatherData();
+        weatherData.observe(this, this::updateWeather);
+
+        LiveData<Boolean> refreshStatus = presenter.getRefreshStatus();
+        refreshStatus.observe(this, this::setRefreshStatus);
+
         getLastCity();
     }
 
     private void updateWeather(WeatherRequest weatherRequest) {
         saveLastCity(weatherRequest.city.name);
         city.setText(weatherRequest.city.name);
-        temp.setText(prepareTemp(weatherRequest.listMassives[0].main.temp));
+        temp.setText(PrepareUtil.prepareTemp(weatherRequest.listMassives[0].main.temp));
         desc.setText(weatherRequest.listMassives[0].weather[0].description);
-        myCard.setSpeedWind(prepareSpeedWind(weatherRequest.listMassives[0].wind.speed));
+        myCard.setSpeedWind(PrepareUtil.prepareSpeedWind(weatherRequest.listMassives[0].wind.speed));
         myCard.setHumidity(weatherRequest.listMassives[0].main.humidity + " %");
-        myCard.setTemp(prepareTemp(weatherRequest.listMassives[0].main.feels_like));
-        myCard.setPressure(preparePressure(weatherRequest.listMassives[0].main.pressure));
+        myCard.setTemp(PrepareUtil.prepareTemp(weatherRequest.listMassives[0].main.feels_like));
+        myCard.setPressure(PrepareUtil.preparePressure(weatherRequest.listMassives[0].main.pressure));
+        updatePageView(weatherRequest);
+    }
+
+    private void updatePageView(WeatherRequest weather){
+        pagerAdapter.setWeatherRequest(weather);
+        if (viewPager.getAdapter() == null) {
+            viewPager.setAdapter(pagerAdapter);
+        }
+        viewPager.setCurrentItem(0);
+
+    }
+
+    private void setRefreshStatus(boolean status) {
+        swipeContainer.setRefreshing(status);
+        myCard.setVisibility(status ? View.INVISIBLE : View.VISIBLE);
+        viewPager.setVisibility(status ? View.INVISIBLE : View.VISIBLE);
     }
 
     @Override
@@ -105,26 +140,5 @@ public class MainActivity extends AppCompatActivity {
         ed.apply();
     }
 
-    private String prepareTemp(float f) {
-        StringBuilder sb = new StringBuilder();
-        if (f > 0) sb.append("+");
-        sb.append(Math.round(f));
-        sb.append(" °C");
-        return sb.toString();
-    }
-
-    private String prepareSpeedWind(float f) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(Math.round(f));
-        sb.append(" m/s");
-        return sb.toString();
-    }
-
-    private String preparePressure(String pressure) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(pressure);
-        sb.append(" mBar");
-        return sb.toString();
-    }
 
 }

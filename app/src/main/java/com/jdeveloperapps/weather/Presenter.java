@@ -20,16 +20,22 @@ public class Presenter extends AndroidViewModel {
     private static final String API_KEY = "c0d574c3889b1c91410749a8a2302d5a";
 
     private MutableLiveData<WeatherRequest> weatherRequest = new MutableLiveData<>();
+    private MutableLiveData<Boolean> refreshStatus = new MutableLiveData<>();
 
     public Presenter(@NonNull Application application) {
         super(application);
     }
 
-    public LiveData<WeatherRequest> getData() {
+    public LiveData<WeatherRequest> getWeatherData() {
         return weatherRequest;
     }
 
+    public LiveData<Boolean> getRefreshStatus() {
+        return refreshStatus;
+    }
+
     public void requestWeatherByCity(String cityName) {
+        refreshStatus.setValue(true);
         OpenWeatherRepo.getSingleton().getAPI_BY_CITY().loadWeather(cityName, "metric", "ru", API_KEY)
                 .enqueue(new Callback<WeatherRequest>() {
                     @Override
@@ -39,16 +45,19 @@ public class Presenter extends AndroidViewModel {
                         } else {
                             shoeMessage("город не найден");
                         }
+                        refreshStatus.setValue(false);
                     }
 
                     @Override
                     public void onFailure(Call<WeatherRequest> call, Throwable t) {
                         shoeMessage("нет интернета");
+                        refreshStatus.setValue(false);
                     }
                 });
     }
 
     public void requestWeatherByGPS(String lat, String lon) {
+        refreshStatus.setValue(true);
         OpenWeatherRepo.getSingleton().getAPI_BY_GPS().loadWeather(lat, lon, "metric", "ru", API_KEY)
                 .enqueue(new Callback<WeatherRequest>() {
                     @Override
@@ -58,12 +67,13 @@ public class Presenter extends AndroidViewModel {
                         } else {
                             shoeMessage("город не найден");
                         }
+                        refreshStatus.setValue(false);
                     }
 
                     @Override
                     public void onFailure(Call<WeatherRequest> call, Throwable t) {
-                        Toast.makeText(getApplication().getApplicationContext(),
-                                "нет интернета", Toast.LENGTH_SHORT).show();
+                        shoeMessage("нет интернета");
+                        refreshStatus.setValue(false);
                     }
                 });
     }
