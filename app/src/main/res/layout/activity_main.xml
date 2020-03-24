@@ -6,68 +6,74 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
-        tools:context=".MainActivity">
-
-        <TextView
-            android:id="@+id/city"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#ffffff"
-            android:textSize="42sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Москва"/>
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
 
 
-        <TextView
-            android:id="@+id/temperature"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#ffffff"
-            android:textSize="62sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/city"
-            tools:text="-6 °C" />
+        <androidx.constraintlayout.widget.ConstraintLayout
 
-        <TextView
-            android:id="@+id/description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#ffffff"
-            android:textSize="22sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/temperature"
-            tools:text="солнечно" />
-
-        <com.jdeveloperapps.weather.customViews.MyCard
-            android:id="@+id/myCard"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:layout_margin="16dp"
-            app:backgroundColor="@color/colorBackgroundCard"
-            app:cornerRadius="20dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/description"
-            app:lineColor="@color/colorLineCard" />
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
+            tools:context=".MainActivity">
 
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/myCard"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent">
+            <TextView
+                android:id="@+id/city"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+                android:textSize="42sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Москва" />
 
-        </androidx.viewpager.widget.ViewPager>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/temperature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+                android:textSize="62sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/city"
+                tools:text="-6 °C" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+                android:textSize="22sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/temperature"
+                tools:text="солнечно" />
+
+            <com.jdeveloperapps.weather.customViews.MyCard
+                android:id="@+id/myCard"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_margin="16dp"
+                app:backgroundColor="@color/colorBackgroundCard"
+                app:cornerRadius="20dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/description"
+                app:lineColor="@color/colorLineCard" />
+
+            <com.jdeveloperapps.weather.customViews.CustomViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/myCard"/>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

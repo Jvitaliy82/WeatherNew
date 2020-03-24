@@ -57,10 +57,5 @@
                 tools:textColor="#000000"/>
 
         </LinearLayout>
-
-
-
     </androidx.cardview.widget.CardView>
-
-
 </FrameLayout>

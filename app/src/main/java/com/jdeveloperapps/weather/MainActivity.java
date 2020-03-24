@@ -140,5 +140,4 @@ public class MainActivity extends AppCompatActivity {
         ed.apply();
     }
 
-
 }
