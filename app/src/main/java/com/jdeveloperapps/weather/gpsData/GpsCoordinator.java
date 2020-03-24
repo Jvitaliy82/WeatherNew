@@ -10,19 +10,21 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
 import com.jdeveloperapps.weather.Presenter;
 
+import java.util.List;
+
 import static android.content.Context.LOCATION_SERVICE;
 
-public class GpsCoordinator implements ActivityCompat.OnRequestPermissionsResultCallback{
+public class GpsCoordinator implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final int PERMISSION_REQUEST_CODE = 10;
     private LocationManager locationManager;
+    private List<String> providers;
     private String provider;
     private Context context;
     private Presenter presenter;
@@ -37,7 +39,6 @@ public class GpsCoordinator implements ActivityCompat.OnRequestPermissionsResult
                 Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(context,
                         Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Log.d("M9", "есть разрешение");
             requestLocation(context);
         } else {
             requestLocationPermission(context);
@@ -53,17 +54,21 @@ public class GpsCoordinator implements ActivityCompat.OnRequestPermissionsResult
         }
         locationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
         Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_LOW);
+        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
 
-        provider = locationManager.getBestProvider(criteria, true);
+        providers = locationManager.getProviders(true);
+        if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
+            provider = LocationManager.NETWORK_PROVIDER;
+        } else {
+            provider = locationManager.getBestProvider(criteria, true);
+        }
+
         if (provider != null) {
-            Log.d("M9", "provider не нулл");
             locationManager.requestSingleUpdate(provider, new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
                     String latitude = Double.toString(location.getLatitude());
                     String lontitude = Double.toString(location.getLongitude());
-                    Log.d("M9", latitude + " : " + lontitude);
                     presenter.requestWeatherByGPS(latitude, lontitude);
                 }
 

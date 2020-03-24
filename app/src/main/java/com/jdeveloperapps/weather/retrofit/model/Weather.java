@@ -2,6 +2,8 @@ package com.jdeveloperapps.weather.retrofit.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Weather {
+import java.io.Serializable;
+
+public class Weather implements Serializable {
     @SerializedName("description") public String description;
 }

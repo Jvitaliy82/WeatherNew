@@ -43,7 +43,7 @@ public class PageFragment extends Fragment {
         TextView date = v.findViewById(R.id.pageWeekDay);
         TextView desc = v.findViewById(R.id.descPage);
         TextView temp = v.findViewById(R.id.tempPage);
-        date.setText(list.dt_txt);
+        date.setText(PrepareUtil.prepareDate(list.dt_txt));
         desc.setText(list.weather[0].description);
         temp.setText(PrepareUtil.prepareTemp(list.main.temp));
 
