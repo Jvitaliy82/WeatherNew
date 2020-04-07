@@ -39,7 +39,7 @@
                 android:layout_gravity="center_horizontal"
                 android:textColor="#ffffff"
                 android:gravity="center"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:textStyle="bold|italic"
                 tools:text="небольшая облачность"
                 tools:textColor="#000000"/>

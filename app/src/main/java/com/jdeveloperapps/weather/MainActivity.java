@@ -1,20 +1,26 @@
 package com.jdeveloperapps.weather;
 
+import android.Manifest;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.firebase.crashlytics.internal.model.CrashlyticsReport;
 import com.jdeveloperapps.weather.customViews.MyCard;
 import com.jdeveloperapps.weather.gpsData.GpsCoordinator;
 import com.jdeveloperapps.weather.retrofit.model.WeatherRequest;
