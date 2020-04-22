@@ -9,5 +9,10 @@
     <item android:id="@+id/gpsButton"
         android:title=""
         android:icon="@android:drawable/ic_menu_mylocation"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
+
+    <item android:id="@+id/mapButton"
+        android:title=""
+        android:icon="@android:drawable/ic_dialog_map"
+        app:showAsAction="ifRoom"/>
 </menu>

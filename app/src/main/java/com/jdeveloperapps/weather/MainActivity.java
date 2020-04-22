@@ -1,26 +1,22 @@
 package com.jdeveloperapps.weather;
 
-import android.Manifest;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
-import com.google.firebase.crashlytics.internal.model.CrashlyticsReport;
+import com.google.android.gms.maps.model.LatLng;
 import com.jdeveloperapps.weather.customViews.MyCard;
 import com.jdeveloperapps.weather.gpsData.GpsCoordinator;
 import com.jdeveloperapps.weather.retrofit.model.WeatherRequest;
@@ -40,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
     private MyFragmentPageAdapter pagerAdapter;
+
+    private WeatherRequest weatherRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateWeather(WeatherRequest weatherRequest) {
+        this.weatherRequest = weatherRequest;
         saveLastCity(weatherRequest.city.name);
         city.setText(weatherRequest.city.name);
         temp.setText(PrepareUtil.prepareTemp(weatherRequest.listMassives[0].main.temp));
@@ -128,6 +127,13 @@ public class MainActivity extends AppCompatActivity {
             case R.id.gpsButton:
                 GpsCoordinator gpsCoordinator = new GpsCoordinator(presenter);
                 gpsCoordinator.getLatLot(this);
+                return true;
+            case R.id.mapButton:
+                Intent intent = new Intent(this, MapsActivity.class);
+                LatLng latLng = new LatLng(weatherRequest.city.coord.lat, weatherRequest.city.coord.lon);
+                intent.putExtra(MapsActivity.LAT_LON, latLng);
+                startActivity(intent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
