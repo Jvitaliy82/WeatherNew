@@ -24,6 +24,7 @@ public class MyCard extends View {
     private int backgroundColor;
     private int lineColor;
     private int cornerRadius;
+    private int textSize;
     private String humidity = "";
     private String temp = "";
     private String pressure = "";
@@ -74,9 +75,9 @@ public class MyCard extends View {
                 getHeight()/7, paintLine);
 
         //надпись ВЛАЖНОСТЬ
-        canvas.drawText("Влажность", getWidth()/20, getHeight()/10 + 30, paintLine);
+        canvas.drawText("Влажность", getWidth()/20, getHeight()/5, paintLine);
         // значвение влажности
-        canvas.drawText(humidity, getWidth()/20, (getHeight()/10 + 35)*2, paintTextBolt);
+        canvas.drawText(humidity, getWidth()/20, (getHeight()/5)*2, paintTextBolt);
 
         ////////////////////////////////////////////////////////////////////////////////
         //иконка ТЕМПЕРАТУРА
@@ -87,9 +88,9 @@ public class MyCard extends View {
                 getHeight()/7, paintLine);
 
         //надпись ОЩУЩАЕТСЯ
-        canvas.drawText("Ощущается", getWidth()/2 + getWidth()/20, getHeight()/10 + 30, paintLine);
+        canvas.drawText("Ощущается", getWidth()/2 + getWidth()/20, getHeight()/5, paintLine);
         // значвение температуры
-        canvas.drawText(temp, getWidth()/2 + getWidth()/20, (getHeight()/10 + 35)*2, paintTextBolt);
+        canvas.drawText(temp, getWidth()/2 + getWidth()/20, (getHeight()/5)*2, paintTextBolt);
 
         ////////////////////////////////////////////////////////////////////////////////
         //иконка ВЕТЕР
@@ -100,13 +101,13 @@ public class MyCard extends View {
                 getHeight()/2 + getHeight()/7, paintLine);
 
         //надпись ВЕТЕР
-        canvas.drawText(WIND, getWidth()/20, getHeight()/2 + getHeight()/10 + 30, paintLine);
+        canvas.drawText(WIND, getWidth()/20, getHeight()/2 + getHeight()/5, paintLine);
         //напрвелие ветра
         canvas.drawText(degWind, getWidth()/20 + paintTextBolt.measureText(WIND),
-                getHeight()/2 + getHeight()/10 + 30, paintTextBolt);
+                getHeight()/2 + getHeight()/10 + 25, paintTextBolt);
 
         // значвение ветра
-        canvas.drawText(speedWind, getWidth()/20, getHeight()/2 + ((getHeight()/10 + 30)*2), paintTextBolt);
+        canvas.drawText(speedWind, getWidth()/20, getHeight()/2 + ((getHeight()/5)*2), paintTextBolt);
 
         ////////////////////////////////////////////////////////////////////////////////
         //иконка ДАВЛЕНИЕ
@@ -118,10 +119,10 @@ public class MyCard extends View {
 
         //надпись ДАВЛЕИНЕ
         canvas.drawText("Давление", getWidth()/2 + getWidth()/20,
-                getHeight()/2 + getHeight()/10 + 30, paintLine);
+                getHeight()/2 + getHeight()/5, paintLine);
 
         // значение давления
-        canvas.drawText(pressure, getWidth()/2 + getWidth()/20, getHeight()/2 + ((getHeight()/10 + 30)*2), paintTextBolt);
+        canvas.drawText(pressure, getWidth()/2 + getWidth()/20, getHeight()/2 + ((getHeight()/5)*2), paintTextBolt);
     }
 
     private void init() {
@@ -132,12 +133,12 @@ public class MyCard extends View {
         paintLine = new Paint();
         paintLine.setColor(getContext().getResources().getColor(lineColor));
         paintLine.setStrokeWidth(1);
-        paintLine.setTextSize(50);
+        paintLine.setTextSize(textSize);
         paintLine.setTextAlign(Paint.Align.LEFT);
 
         paintTextBolt = new Paint();
         paintTextBolt.setColor(getContext().getResources().getColor(lineColor));
-        paintTextBolt.setTextSize(60);
+        paintTextBolt.setTextSize(textSize);
         paintLine.setTextAlign(Paint.Align.LEFT);
         paintTextBolt.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
 
@@ -148,6 +149,7 @@ public class MyCard extends View {
         backgroundColor = typedArray.getResourceId(R.styleable.MyCard_backgroundColor, android.R.color.holo_red_dark);
         lineColor = typedArray.getResourceId(R.styleable.MyCard_lineColor, android.R.color.holo_blue_light);
         cornerRadius = typedArray.getLayoutDimension(R.styleable.MyCard_cornerRadius, 20);
+        textSize = typedArray.getLayoutDimension(R.styleable.MyCard_textSize, 20);
         typedArray.recycle();
     }
 

@@ -1,6 +1,9 @@
 package com.jdeveloperapps.weather;
 
 import android.app.Application;
+import android.graphics.Color;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -43,14 +46,14 @@ public class Presenter extends AndroidViewModel {
                         if (response.body() != null && response.isSuccessful()) {
                             weatherRequest.setValue(response.body());
                         } else {
-                            shoeMessage("город не найден");
+                            showMessage("город не найден");
                         }
                         refreshStatus.setValue(false);
                     }
 
                     @Override
                     public void onFailure(Call<WeatherRequest> call, Throwable t) {
-                        shoeMessage("нет интернета");
+                        showMessage("нет интернета");
                         refreshStatus.setValue(false);
                     }
                 });
@@ -65,21 +68,30 @@ public class Presenter extends AndroidViewModel {
                         if (response.body() != null && response.isSuccessful()) {
                             weatherRequest.setValue(response.body());
                         } else {
-                            shoeMessage("город не найден");
+                            showMessage("город не найден");
                         }
                         refreshStatus.setValue(false);
                     }
 
                     @Override
                     public void onFailure(Call<WeatherRequest> call, Throwable t) {
-                        shoeMessage("нет интернета");
+                        showMessage("нет интернета");
                         refreshStatus.setValue(false);
                     }
                 });
     }
 
-    private void shoeMessage(String message) {
-        Toast.makeText(getApplication().getApplicationContext(),
-                message, Toast.LENGTH_SHORT).show();
+    private void showMessage(String message) {
+        Toast toast = Toast.makeText(getApplication().getApplicationContext(),
+                message, Toast.LENGTH_LONG);
+
+        View toastView = toast.getView();
+        TextView toastMessage = toastView.findViewById(android.R.id.message);
+
+        toastView.setBackgroundColor(Color.YELLOW);
+        toastMessage.setTextColor(Color.BLACK);
+        toastView.setPadding(10, 10, 10, 10);
+
+        toast.show();
     }
 }
