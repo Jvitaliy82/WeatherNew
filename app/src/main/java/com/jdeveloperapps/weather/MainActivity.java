@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.jdeveloperapps.weather.customViews.MyCard;
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView desc;
     private MyCard myCard;
 
-    private ViewPager viewPager;
+    private ViewPager2 viewPager;
     private MyFragmentPageAdapter pagerAdapter;
 
     private WeatherRequest weatherRequest;
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         myCard = findViewById(R.id.myCard);
 
         viewPager = findViewById(R.id.pager);
-        pagerAdapter = new MyFragmentPageAdapter(getSupportFragmentManager());
+        pagerAdapter = new MyFragmentPageAdapter();
 
         viewPager.setClipToPadding(false);
         viewPager.setPadding(60, 0, 60, 0);
